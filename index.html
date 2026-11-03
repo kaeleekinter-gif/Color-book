@@ -3,603 +3,442 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Colorbook</title>
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: "Trebuchet MS", Arial, sans-serif;
-  background: #fbf8f1;
-  color: #344638;
-}
-
-header {
-  padding: 22px 6%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #e9e3d8;
-}
-
-.logo {
-  font-family: Georgia, serif;
-  font-size: 28px;
-  font-weight: bold;
-  color: #385643;
-}
-
-.logo span { color: #c77e83; }
-
-.header-note {
-  color: #8c9184;
-  font-size: 13px;
-}
-
-main {
-  max-width: 1100px;
-  margin: auto;
-  padding: 35px 22px 60px;
-}
-
-h1 {
-  font-family: Georgia, serif;
-  font-size: clamp(30px, 5vw, 43px);
-  font-weight: normal;
-  margin: 5px 0 10px;
-}
-
-.subtitle {
-  color: #888c80;
-  margin-bottom: 30px;
-  line-height: 1.6;
-}
-
-.section-title {
-  font-family: Georgia, serif;
-  font-size: 23px;
-  margin: 32px 0 17px;
-}
-
-.collections {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 18px;
-}
-
-.collection {
-  padding: 25px;
-  border: 1px solid #e8e1d6;
-  border-radius: 17px;
-  text-align: left;
-  cursor: pointer;
-  min-height: 155px;
-  transition: .2s;
-}
-
-.collection:hover, .page-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px #0000000c;
-}
-
-.collection.christmas { background: #f0f2e9; }
-.collection.regular { background: #f7e9e8; }
-
-.collection .symbol {
-  font-size: 31px;
-  margin-bottom: 12px;
-}
-
-.collection h2 {
-  font-family: Georgia, serif;
-  font-size: 23px;
-  margin: 0 0 6px;
-  font-weight: normal;
-}
-
-.collection p {
-  color: #85877e;
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.pages {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 18px;
-}
-
-.page-card {
-  background: white;
-  border: 1px solid #eae5dc;
-  border-radius: 15px;
-  padding: 12px;
-  cursor: pointer;
-  text-align: left;
-  transition: .2s;
-}
-
-.page-preview {
-  height: 155px;
-  border-radius: 10px;
-  background: #fbfaf6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 75px;
-}
-
-.page-card h3 {
-  margin: 12px 4px 3px;
-  font-family: Georgia, serif;
-  font-size: 18px;
-  font-weight: normal;
-}
-
-.page-card p {
-  margin: 0 4px 5px;
-  color: #99958b;
-  font-size: 12px;
-}
-
-button {
-  font-family: inherit;
-}
-
-.hidden { display: none !important; }
-
-.back-button, .small-button {
-  border: 1px solid #e4ded4;
-  background: white;
-  border-radius: 30px;
-  padding: 10px 17px;
-  color: #526451;
-  cursor: pointer;
-}
-
-.back-button { margin-bottom: 20px; }
-
-.editor-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.editor-top h1 { font-size: 30px; }
-
-.editor-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 205px;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.canvas-area {
-  background: white;
-  border: 1px solid #e8e2d8;
-  border-radius: 17px;
-  padding: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 440px;
-}
-
-#drawing {
-  width: 100%;
-  max-width: 530px;
-  height: auto;
-  max-height: 540px;
-}
-
-#drawing [data-part] {
-  fill: white;
-  stroke: #30352f;
-  stroke-width: 4;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  cursor: pointer;
-  transition: fill .12s;
-}
-
-#drawing [data-part]:hover {
-  stroke: #8a9a83;
-  stroke-width: 5;
-}
-
-.tools {
-  background: white;
-  border: 1px solid #e8e2d8;
-  border-radius: 17px;
-  padding: 18px;
-  align-self: start;
-}
-
-.tools h3 {
-  font-family: Georgia, serif;
-  font-size: 19px;
-  font-weight: normal;
-  margin: 0 0 13px;
-}
-
-.palette {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 9px;
-  margin-bottom: 20px;
-}
-
-.swatch {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 2px solid #e8e4dc;
-  cursor: pointer;
-}
-
-.swatch.selected {
-  outline: 2px solid #526b57;
-  outline-offset: 3px;
-}
-
-.custom-color {
-  width: 100%;
-  height: 38px;
-  margin-bottom: 17px;
-  border: 1px solid #e8e2d8;
-  border-radius: 8px;
-  background: white;
-  cursor: pointer;
-}
-
-.tool-buttons {
-  display: grid;
-  gap: 8px;
-}
-
-.tool-buttons button {
-  border: 1px solid #e8e2d8;
-  background: #fbfaf6;
-  padding: 10px;
-  border-radius: 9px;
-  cursor: pointer;
-  color: #536451;
-}
-
-.tool-buttons button:hover, .small-button:hover,
-.back-button:hover { background: #f0f2e9; }
-
-.hint {
-  color: #99958b;
-  font-size: 12px;
-  line-height: 1.5;
-  margin-top: 15px;
-}
-
-footer {
-  text-align: center;
-  padding: 25px;
-  color: #aaa396;
-  font-size: 12px;
-}
-
-@media(max-width: 650px) {
-  .editor-layout { grid-template-columns: 1fr; }
-  .canvas-area { min-height: 300px; }
-  #drawing { max-height: 390px; }
-  .tools { order: 2; }
-  .collections { gap: 10px; }
-  .collection { padding: 17px; }
+*{box-sizing:border-box}
+body{margin:0;background:#faf8f2;color:#405344;font-family:"Trebuchet MS",Arial,sans-serif}
+header{padding:20px 6%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e9e3d8}
+.logo{font:30px Georgia,serif;color:#405b47}
+.logo span{color:#c77e83}
+header small{color:#999488}
+main{max-width:1100px;margin:auto;padding:35px 22px 65px}
+h1{font:normal clamp(30px,5vw,43px) Georgia,serif;margin:8px 0}
+h2{font:normal 24px Georgia,serif}
+.muted{color:#898b80;line-height:1.6}
+.hidden{display:none!important}
+.collections{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin:30px 0}
+.collection{border:1px solid #e7e0d5;border-radius:17px;padding:25px;text-align:left;cursor:pointer;min-height:160px;color:#405344;transition:.2s}
+.collection:hover,.page-card:hover{transform:translateY(-3px);box-shadow:0 7px 20px #0000000c}
+.collection:first-child{background:#edf0e7}
+.collection:last-child{background:#f7e9e8}
+.collection h2{margin:10px 0}
+.collection p{color:#85877e;font-size:13px;margin:0}
+.collection-art{height:55px;font:44px Georgia;color:#a0ad96}
+.collection:last-child .collection-art{color:#c58e91}
+.action,.back{background:white;border:1px solid #e7e0d5;border-radius:25px;padding:10px 16px;color:#526451;cursor:pointer}
+.action:hover,.back:hover{background:#f0f2e9}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}
+.action.active{background:#edf0e7;border-color:#a5b49e}
+.search{width:100%;max-width:400px;padding:12px 16px;border:1px solid #e7e0d5;border-radius:25px;background:white;outline:none}
+.pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:16px;margin-top:20px}
+.page-card{border:1px solid #e8e2d8;background:white;border-radius:15px;padding:12px;text-align:left;color:#405344;cursor:pointer;transition:.2s}
+.preview{height:145px;border-radius:10px;background:#fbfaf6;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.preview svg{width:100%;height:100%}
+.page-card h3{font:normal 17px Georgia,serif;margin:12px 3px 4px}
+.page-card p{font-size:12px;color:#99958b;margin:0 3px 5px}
+.favorite{float:right;border:0;background:none;color:#c77e83;font-size:20px;cursor:pointer}
+.editor-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.editor-top h1{font-size:29px}
+.back{margin-bottom:14px}
+.editor-layout{display:grid;grid-template-columns:minmax(0,1fr) 215px;gap:18px;margin-top:20px}
+.canvas-area{background:white;border:1px solid #e8e2d8;border-radius:17px;padding:15px;display:flex;align-items:center;justify-content:center;min-height:450px}
+#drawing{width:100%;max-width:530px;max-height:550px}
+#drawing [data-part]{fill:white;stroke:#30352f;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round;cursor:pointer}
+#drawing [data-part]:hover{stroke:#91a18a;stroke-width:5}
+.tools{background:white;border:1px solid #e8e2d8;border-radius:17px;padding:17px;align-self:start}
+.tools h3{font:normal 19px Georgia,serif;margin:0 0 13px}
+.palette{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.swatch{width:34px;height:34px;border-radius:50%;border:2px solid #e8e4dc;cursor:pointer}
+.swatch.selected{outline:2px solid #526b57;outline-offset:3px}
+#custom{width:100%;height:38px;border:1px solid #e8e2d8;border-radius:8px;margin-bottom:18px;background:white;cursor:pointer}
+.tool-buttons{display:grid;gap:8px}
+.tool-buttons button{padding:10px;border:1px solid #e8e2d8;border-radius:9px;background:#fbfaf6;color:#526451;cursor:pointer}
+.tool-buttons button:hover{background:#edf0e7}
+.hint{font-size:12px;color:#99958b;line-height:1.6}
+.empty{padding:35px;color:#999;text-align:center}
+footer{text-align:center;padding:25px;color:#aaa396;font-size:12px}
+@media(max-width:650px){
+ .editor-layout{grid-template-columns:1fr}
+ .tools{order:2}
+ .canvas-area{min-height:310px}
+ .collections{gap:10px}
+ .collection{padding:17px}
 }
 </style>
 </head>
 <body>
-
 <header>
-  <div class="logo">Color<span>book</span></div>
-  <div class="header-note">your little coloring place</div>
+ <div class="logo">Color<span>book</span></div>
+ <small>Your little coloring place</small>
 </header>
 
 <main>
-  <section id="home">
-    <h1>A little color goes a long way.</h1>
-    <p class="subtitle">Pick a collection, choose a page, and make it your own.</p>
+<section id="home">
+ <h1>A little color goes a long way.</h1>
+ <p class="muted">Choose a collection and find your next picture to color.</p>
+ <div class="collections">
+  <button class="collection" onclick="showCollection('christmas')">
+   <div class="collection-art">✳</div>
+   <h2>Christmas</h2>
+   <p>25 cozy holiday coloring pages</p>
+  </button>
+  <button class="collection" onclick="showCollection('everyday')">
+   <div class="collection-art">✿</div>
+   <h2>Everyday</h2>
+   <p>25 fun everyday coloring pages</p>
+  </button>
+ </div>
+ <button class="action" onclick="showFavorites()">My favorites</button>
+ <button class="action" onclick="showFinished()">Finished pages</button>
+</section>
 
-    <div class="section-title">Choose your collection</div>
-    <div class="collections">
-      <button class="collection christmas" onclick="showCollection('christmas')">
-        <div class="symbol">✳</div>
-        <h2>Christmas</h2>
-        <p>Cozy holiday coloring pages</p>
-      </button>
-      <button class="collection regular" onclick="showCollection('regular')">
-        <div class="symbol">✿</div>
-        <h2>Everyday</h2>
-        <p>Flowers, animals, and little things</p>
-      </button>
-    </div>
-  </section>
+<section id="collection" class="hidden">
+ <button class="back" onclick="goHome()">Back to home</button>
+ <h1 id="collection-title"></h1>
+ <p class="muted" id="collection-description"></p>
+ <input class="search" id="search" placeholder="Search coloring pages..." oninput="renderPages()">
+ <div class="toolbar">
+  <button class="action active" id="all-button" onclick="setFilter('all')">All pages</button>
+  <button class="action" id="favorites-button" onclick="setFilter('favorites')">Favorites</button>
+ </div>
+ <div class="pages" id="page-list"></div>
+</section>
 
-  <section id="collection" class="hidden">
-    <button class="back-button" onclick="goHome()">← Collections</button>
-    <h1 id="collection-title"></h1>
-    <p class="subtitle" id="collection-description"></p>
-    <div class="pages" id="page-list"></div>
-  </section>
-
-  <section id="editor" class="hidden">
-    <div class="editor-top">
-      <div>
-        <button class="back-button" onclick="backToPages()">← Pages</button>
-        <h1 id="page-title"></h1>
-      </div>
-      <button class="small-button" onclick="savePage()">Save page</button>
-    </div>
-
-    <div class="editor-layout">
-      <div class="canvas-area">
-        <svg id="drawing" viewBox="0 0 400 430"
-             xmlns="http://www.w3.org/2000/svg"></svg>
-      </div>
-
-      <aside class="tools">
-        <h3>Choose a color</h3>
-        <div class="palette" id="palette"></div>
-        <input class="custom-color" type="color" id="custom-color"
-               value="#e9a4a5" title="Choose your own color">
-
-        <h3>Tools</h3>
-        <div class="tool-buttons">
-          <button onclick="undo()">↶ Undo</button>
-          <button onclick="redo()">↷ Redo</button>
-          <button onclick="resetPage()">Reset page</button>
-        </div>
-        <p class="hint">Choose a color, then click any white section of the picture to fill it.</p>
-      </aside>
-    </div>
-  </section>
+<section id="editor" class="hidden">
+ <div class="editor-top">
+  <div>
+   <button class="back" onclick="backToPages()">Back to pages</button>
+   <h1 id="page-title"></h1>
+  </div>
+  <button class="action" onclick="markFinished()">Mark as finished</button>
+ </div>
+ <div class="editor-layout">
+  <div class="canvas-area">
+   <svg id="drawing" viewBox="0 0 400 430" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+  <aside class="tools">
+   <h3>Choose a color</h3>
+   <div class="palette" id="palette"></div>
+   <input type="color" id="custom" value="#e99a55" aria-label="Choose custom color">
+   <h3>Tools</h3>
+   <div class="tool-buttons">
+    <button onclick="undo()">Undo</button>
+    <button onclick="redo()">Redo</button>
+    <button onclick="resetPage()">Clear page</button>
+   </div>
+   <p class="hint">Choose a color, then click a white section of the picture to fill it. You can change colors whenever you like.</p>
+  </aside>
+ </div>
+</section>
 </main>
-
-<footer>Made for a little creative time ♡</footer>
+<footer>Made for a little creative time</footer>
 
 <script>
-const colors = [
-  "#e9a4a5", "#d77c80", "#bd4c50", "#a83d43",
-  "#e9c1a2", "#e9d58f", "#f1e9c9", "#f5f0e4",
-  "#a9c5ad", "#668b70", "#365b43", "#b9d8df",
-  "#83b3c9", "#7185ad", "#b9a5ca", "#e0b6ce",
-  "#c7a58a", "#92745f", "#777a75", "#444943"
+const colors=[
+ "#e9a4a5","#d77c80","#bd4c50","#a83d43",
+ "#e99a55","#f2b95d","#f5d99b","#f0e9d5",
+ "#a9c5ad","#668b70","#365b43","#b9d8df",
+ "#83b3c9","#7185ad","#b9a5ca","#e0b6ce",
+ "#c7a58a","#92745f","#777a75","#444943",
+ "#f5c4a5","#f4a36b","#d8b4a0","#ffffff"
 ];
 
-const drawings = {
-  tree: `
-    <path data-part="tree-star" d="M200 25 L210 47 L234 50 L216 67 L221 90 L200 78 L179 90 L184 67 L166 50 L190 47 Z"/>
-    <path data-part="tree-top" d="M200 80 L252 155 L224 150 L275 222 L239 215 L302 294 L98 294 L161 215 L125 222 L176 150 L148 155 Z"/>
-    <rect data-part="tree-trunk" x="175" y="294" width="50" height="75"/>
-    <circle data-part="ornament1" cx="200" cy="140" r="12"/>
-    <circle data-part="ornament2" cx="165" cy="207" r="13"/>
-    <circle data-part="ornament3" cx="237" cy="205" r="13"/>
-    <circle data-part="ornament4" cx="145" cy="267" r="13"/>
-    <circle data-part="ornament5" cx="255" cy="264" r="13"/>
-    <rect data-part="ground" x="70" y="369" width="260" height="3" />
-  `,
-  present: `
-    <rect data-part="box" x="80" y="180" width="240" height="165" rx="8"/>
-    <rect data-part="ribbon1" x="181" y="180" width="38" height="165"/>
-    <rect data-part="ribbon2" x="80" y="238" width="240" height="35"/>
-    <path data-part="bow1" d="M200 180 C115 95 85 165 185 207 Z"/>
-    <path data-part="bow2" d="M200 180 C285 95 315 165 215 207 Z"/>
-    <circle data-part="bow-center" cx="200" cy="190" r="13"/>
-  `,
-  snowman: `
-    <circle data-part="body-bottom" cx="200" cy="300" r="83"/>
-    <circle data-part="body-middle" cx="200" cy="188" r="60"/>
-    <circle data-part="body-head" cx="200" cy="95" r="43"/>
-    <rect data-part="hat" x="163" y="33" width="74" height="12"/>
-    <rect data-part="hat-top" x="178" y="3" width="44" height="34"/>
-    <path data-part="scarf" d="M148 140 Q200 163 252 140 L247 160 Q200 182 153 160 Z"/>
-    <path data-part="scarf-tail" d="M225 155 L248 157 L240 220 L215 213 Z"/>
-    <circle data-part="nose" cx="200" cy="106" r="8"/>
-    <circle data-part="button1" cx="200" cy="187" r="8"/>
-    <circle data-part="button2" cx="200" cy="217" r="8"/>
-    <circle data-part="button3" cx="200" cy="247" r="8"/>
-  `,
-  flower: `
-    <ellipse data-part="petal1" cx="200" cy="105" rx="36" ry="67"/>
-    <ellipse data-part="petal2" cx="200" cy="245" rx="36" ry="67"/>
-    <ellipse data-part="petal3" cx="130" cy="175" rx="67" ry="36"/>
-    <ellipse data-part="petal4" cx="270" cy="175" rx="67" ry="36"/>
-    <ellipse data-part="petal5" cx="150" cy="125" rx="35" ry="57" transform="rotate(-45 150 125)"/>
-    <ellipse data-part="petal6" cx="250" cy="125" rx="35" ry="57" transform="rotate(45 250 125)"/>
-    <ellipse data-part="petal7" cx="150" cy="225" rx="35" ry="57" transform="rotate(45 150 225)"/>
-    <ellipse data-part="petal8" cx="250" cy="225" rx="35" ry="57" transform="rotate(-45 250 225)"/>
-    <circle data-part="flower-center" cx="200" cy="175" r="43"/>
-    <path data-part="stem" d="M190 218 Q200 300 192 390 L210 390 Q204 300 210 218 Z"/>
-    <path data-part="leaf1" d="M195 300 Q110 260 115 330 Q165 350 195 300 Z"/>
-    <path data-part="leaf2" d="M202 350 Q275 285 280 350 Q245 390 202 350 Z"/>
-  `,
-  mushroom: `
-    <path data-part="cap" d="M65 195 Q75 65 200 65 Q325 65 335 195 Z"/>
-    <path data-part="stem" d="M145 195 L255 195 L240 365 Q200 390 160 365 Z"/>
-    <circle data-part="spot1" cx="135" cy="140" r="16"/>
-    <circle data-part="spot2" cx="205" cy="105" r="18"/>
-    <circle data-part="spot3" cx="270" cy="150" r="15"/>
-  `,
-  heart: `
-    <path data-part="heart" d="M200 345 C155 295 55 220 75 140 C95 65 180 75 200 135 C220 75 305 65 325 140 C345 220 245 295 200 345 Z"/>
-  `
-};
+const christmasNames=[
+ "Christmas Tree","Decorated Tree","Winter Tree","Starry Tree","Classic Tree",
+ "Big Present","Gift Box Stack","Holiday Presents","Wrapped Gifts","Bow Present",
+ "Gingerbread House","Candy Cottage","Snowy Gingerbread Home","Sweet Cottage","Peppermint House",
+ "Snowman","Snowman with Scarf","Winter Snowman","Happy Snowman","Snowman in a Hat",
+ "Christmas Wreath","Berry Wreath","Winter Wreath","Holiday Door Wreath","Bow Wreath"
+];
+const everydayNames=[
+ "Garden Flower","Daisy Bouquet","Spring Flowers","Big Petal Flower","Wildflower",
+ "Butterfly Garden","Big Butterfly","Spring Butterfly","Garden Wings","Butterfly Friends",
+ "Sleepy Cat","Kitten","Cat with a Bow","Fluffy Cat","Sitting Kitty",
+ "Beach Day","Sunny Beach","Umbrella and Beach Ball","Summer Scene","Seaside Afternoon",
+ "Cupcake","Birthday Cupcake","Strawberry Treat","Sweet Bakery","Party Cake"
+];
+const types=["tree","present","house","snowman","wreath","flower","butterfly","cat","beach","cupcake"];
+const pages=[
+ ...christmasNames.map((name,i)=>({id:"c"+i,name,type:types[Math.floor(i/5)],collection:"christmas",variant:i%5})),
+ ...everydayNames.map((name,i)=>({id:"e"+i,name,type:types[5+Math.floor(i/5)],collection:"everyday",variant:i%5}))
+];
 
-const pages = {
-  christmas: [
-    {id:"tree", name:"Christmas Tree", icon:"🎄"},
-    {id:"present", name:"Christmas Present", icon:"🎁"},
-    {id:"snowman", name:"Snowman", icon:"☃"}
-  ],
-  regular: [
-    {id:"flower", name:"Big Flower", icon:"🌼"},
-    {id:"mushroom", name:"Mushroom", icon:"🍄"},
-    {id:"heart", name:"Big Heart", icon:"♡"}
-  ]
-};
+const $=id=>document.getElementById(id);
+let currentCollection="christmas",currentPage=null,currentColor=colors[4];
+let history=[],future=[],filter="all",favorites=JSON.parse(localStorage.getItem("cb-favorites")||"[]");
+let finished=JSON.parse(localStorage.getItem("cb-finished")||"[]");
 
-let currentCollection = "";
-let currentPage = "";
-let currentColor = colors[0];
-let history = [];
-let future = [];
-
-const home = document.getElementById("home");
-const collectionScreen = document.getElementById("collection");
-const editor = document.getElementById("editor");
-const drawing = document.getElementById("drawing");
-
-function hideScreens() {
-  home.classList.add("hidden");
-  collectionScreen.classList.add("hidden");
-  editor.classList.add("hidden");
+function region(id,shape){
+ return `<g data-part="${id}">${shape}</g>`;
+}
+function circle(id,x,y,r){
+ return region(id,`<circle cx="${x}" cy="${y}" r="${r}"/>`);
+}
+function rect(id,x,y,w,h,rx=5){
+ return region(id,`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}"/>`);
+}
+function path(id,d){
+ return region(id,`<path d="${d}"/>`);
 }
 
-function goHome() {
-  hideScreens();
-  home.classList.remove("hidden");
+function makeArt(type,v){
+ let s="";
+ if(type==="tree"){
+  for(let i=0;i<5;i++){
+   let y=75+i*57,w=45+i*22;
+   s+=path("branch"+i,`M200 ${y-40} L${200-w} ${y+35} L${200+w} ${y+35} Z`);
+  }
+  s+=rect("trunk",178,350,44,55);
+  for(let i=0;i<10;i++){
+   let row=Math.floor(i/2),x=150+(i%2)*100+(v-2)*3,y=120+row*48;
+   s+=circle("ornament"+i,x,y,12);
+  }
+  s+=path("star","M200 12 L212 43 L245 45 L220 66 L228 98 L200 81 L172 98 L180 66 L155 45 L188 43 Z");
+ } else if(type==="present"){
+  for(let i=0;i<5;i++){
+   let x=30+(i%2)*175,y=55+Math.floor(i/2)*112,w=145,h=88;
+   s+=rect("box"+i,x,y,w,h,5);
+   s+=rect("ribbonV"+i,x+w*.42,y,w*.16,h,2);
+   s+=rect("ribbonH"+i,x,y+h*.38,w,h*.18,2);
+  }
+  s+=path("bow1","M200 55 C120 -5 105 60 190 85 Z");
+  s+=path("bow2","M200 55 C280 -5 295 60 210 85 Z");
+  s+=circle("bowCenter",200,60,12);
+ } else if(type==="house"){
+  s+=path("roofLeft","M55 190 L200 65 L200 190 Z");
+  s+=path("roofRight","M200 65 L345 190 L200 190 Z");
+  s+=rect("wall",85,190,230,180,3);
+  s+=rect("door",165,260,70,110,4);
+  s+=rect("windowLeft",105,220,48,48,3);
+  s+=rect("windowRight",247,220,48,48,3);
+  s+=rect("chimney",260,80,42,75,2);
+  s+=path("icing1","M65 180 Q100 210 135 180 Q170 210 200 180");
+  s+=path("icing2","M200 180 Q235 210 270 180 Q300 205 335 180");
+  for(let i=0;i<6;i++)s+=circle("candy"+i,100+i*40,155,9);
+  s+=rect("path",180,370,40,45,2);
+ } else if(type==="snowman"){
+  s+=circle("bottom",200,305,85)+circle("middle",200,190,62)+circle("head",200,95,43);
+  s+=rect("hat",160,35,80,12,2)+rect("hatTop",178,2,44,35,2);
+  s+=path("scarf","M140 140 Q200 170 260 140 L250 165 Q200 190 150 165 Z");
+  s+=path("scarfTail","M225 158 L252 160 L245 230 L215 220 Z");
+  s+=path("nose","M200 100 L240 110 L200 120 Z");
+  s+=circle("eye1",184,83,5)+circle("eye2",216,83,5);
+  for(let i=0;i<3;i++)s+=circle("button"+i,200,180+i*34,8);
+  s+=path("arm1","M145 190 L80 155 L85 145 L150 175 Z");
+  s+=path("arm2","M250 190 L315 155 L310 145 L245 175 Z");
+ } else if(type==="wreath"){
+  for(let i=0;i<14;i++){
+   let a=i*Math.PI/7,x=200+95*Math.cos(a),y=205+95*Math.sin(a);
+   s+=region("leaf"+i,`<ellipse cx="${x}" cy="${y}" rx="25" ry="12" transform="rotate(${i*25} ${x} ${y})"/>`);
+  }
+  for(let i=0;i<6;i++){
+   let a=i*Math.PI/3;
+   s+=circle("berry"+i,200+65*Math.cos(a),205+65*Math.sin(a),13);
+  }
+  s+=path("bowL","M200 100 Q105 40 125 120 Q160 150 200 112 Z");
+  s+=path("bowR","M200 100 Q295 40 275 120 Q240 150 200 112 Z");
+  s+=circle("bowKnot",200,110,13);
+ } else if(type==="flower"){
+  for(let i=0;i<12;i++){
+   let a=i*Math.PI/6,x=200+65*Math.cos(a),y=150+65*Math.sin(a);
+   s+=region("petal"+i,`<ellipse cx="${x}" cy="${y}" rx="30" ry="48" transform="rotate(${i*30} ${x} ${y})"/>`);
+  }
+  s+=circle("center",200,150,37);
+  s+=path("stem","M190 185 Q205 270 192 405 L210 405 Q205 270 210 185 Z");
+  s+=path("leaf1","M198 290 Q100 245 115 330 Q165 350 198 290 Z");
+  s+=path("leaf2","M204 345 Q290 285 285 355 Q245 390 204 345 Z");
+ } else if(type==="butterfly"){
+  s+=path("wing1","M190 185 Q75 25 55 135 Q45 235 185 210 Z");
+  s+=path("wing2","M210 185 Q325 25 345 135 Q355 235 215 210 Z");
+  s+=path("wing3","M185 205 Q65 190 95 315 Q130 350 190 225 Z");
+  s+=path("wing4","M215 205 Q335 190 305 315 Q270 350 210 225 Z");
+  s+=rect("body",190,135,20,125,10);
+  s+=path("antenna1","M195 145 Q160 80 145 90");
+  s+=path("antenna2","M205 145 Q240 80 255 90");
+  for(let i=0;i<12;i++){
+   let x=85+(i%6)*46,y=i<6?155:260;
+   s+=circle("spot"+i,x,y,10);
+  }
+ } else if(type==="cat"){
+  s+=path("body","M110 235 Q110 165 200 170 Q290 165 290 275 Q290 350 200 350 Q110 350 110 235 Z");
+  s+=circle("head",200,130,75);
+  s+=path("ear1","M145 90 L145 25 L190 75 Z");
+  s+=path("ear2","M210 75 L255 25 L255 90 Z");
+  s+=path("tail","M275 270 Q360 230 330 155 Q320 130 300 150 L310 185 Q330 225 275 240 Z");
+  s+=circle("eye1",175,125,7)+circle("eye2",225,125,7);
+  s+=path("nose","M190 145 L210 145 L200 157 Z");
+  s+=path("mouth1","M200 157 Q180 180 165 160");
+  s+=path("mouth2","M200 157 Q220 180 235 160");
+  s+=path("leg1","M125 300 L125 365 L160 365 L160 330 Z");
+  s+=path("leg2","M175 330 L175 365 L205 365 L205 330 Z");
+  s+=path("leg3","M220 330 L220 365 L250 365 L250 330 Z");
+  s+=path("leg4","M260 300 L260 365 L290 365 L290 330 Z");
+ } else if(type==="beach"){
+  s+=circle("sun",310,70,43);
+  s+=path("umbrella1","M40 200 Q120 35 200 200 Z");
+  s+=path("umbrella2","M200 200 Q280 35 360 200 Z");
+  s+=path("umbrellaPole","M200 200 L200 370 L210 370 L210 200 Z");
+  s+=path("ball1","M75 280 Q125 220 175 280 L125 340 Z");
+  s+=path("ball2","M75 280 Q125 340 175 280 L125 220 Z");
+  s+=path("bucket","M245 280 L330 280 L315 370 L260 370 Z");
+  s+=rect("bucketHandle",265,255,45,12,6);
+  for(let i=0;i<6;i++)s+=circle("sand"+i,65+i*55,390,8);
+ } else if(type==="cupcake"){
+  s+=path("wrapper","M115 205 L285 205 L260 375 L140 375 Z");
+  for(let i=0;i<6;i++){
+   s+=path("stripe"+i,`M${135+i*25} 220 L${145+i*20} 355 L${155+i*18} 355 L${155+i*22} 220 Z`);
+  }
+  s+=path("icing1","M110 205 Q75 175 115 145 Q100 100 150 115 Q175 50 205 105 Q255 65 260 130 Q315 130 285 185 Q315 210 280 220 L120 220 Z");
+  s+=circle("cherry",200,78,24);
+  s+=rect("cherryStem",198,42,5,20,3);
+  s+=circle("icingDot1",145,160,12);
+  s+=circle("icingDot2",255,170,12);
+  s+=circle("icingDot3",200,130,12);
+ }
+ return s;
 }
 
-function showCollection(name) {
-  currentCollection = name;
-  hideScreens();
-  collectionScreen.classList.remove("hidden");
-
-  document.getElementById("collection-title").textContent =
-    name === "christmas" ? "Christmas Coloring" : "Everyday Coloring";
-
-  document.getElementById("collection-description").textContent =
-    "Choose a picture to start coloring.";
-
-  const list = document.getElementById("page-list");
-  list.innerHTML = "";
-
-  pages[name].forEach(page => {
-    const card = document.createElement("button");
-    card.className = "page-card";
-    card.innerHTML = `
-      <div class="page-preview">${page.icon}</div>
-      <h3>${page.name}</h3>
-      <p>Tap to color</p>
-    `;
-    card.onclick = () => openPage(page.id, page.name);
-    list.appendChild(card);
-  });
+function makePreview(page){
+ return `<svg viewBox="0 0 400 430" xmlns="http://www.w3.org/2000/svg">${makeArt(page.type,page.variant)}</svg>`;
 }
 
-function openPage(id, name) {
-  currentPage = id;
-  hideScreens();
-  editor.classList.remove("hidden");
-  document.getElementById("page-title").textContent = name;
-
-  drawing.innerHTML = drawings[id];
-  history = [];
-  future = [];
-
-  const saved = JSON.parse(localStorage.getItem("colorbook-" + id) || "{}");
-  drawing.querySelectorAll("[data-part]").forEach(part => {
-    part.style.fill = saved[part.dataset.part] || "white";
-  });
-
-  drawing.querySelectorAll("[data-part]").forEach(part => {
-    part.addEventListener("click", () => fillPart(part));
-  });
-
-  makePalette();
+function hideScreens(){
+ ["home","collection","editor"].forEach(id=>$(id).classList.add("hidden"));
 }
-
-function backToPages() {
-  showCollection(currentCollection);
+function goHome(){
+ hideScreens();
+ $("home").classList.remove("hidden");
 }
-
-function makePalette() {
-  const palette = document.getElementById("palette");
-  palette.innerHTML = "";
-
-  colors.forEach(color => {
-    const button = document.createElement("button");
-    button.className = "swatch";
-    button.style.background = color;
-    button.title = color;
-
-    if (color === currentColor) button.classList.add("selected");
-
-    button.onclick = () => {
-      currentColor = color;
-      document.getElementById("custom-color").value = color;
-      makePalette();
-    };
-
-    palette.appendChild(button);
-  });
+function showCollection(name){
+ currentCollection=name;filter="all";
+ hideScreens();
+ $("collection").classList.remove("hidden");
+ $("collection-title").textContent=name==="christmas"?"Christmas Collection":"Everyday Collection";
+ $("collection-description").textContent="Choose a picture to start coloring.";
+ $("search").value="";
+ renderPages();
 }
-
-document.getElementById("custom-color").addEventListener("input", event => {
-  currentColor = event.target.value;
-  makePalette();
+function showFavorites(){
+ currentCollection="favorites";filter="favorites";
+ hideScreens();$("collection").classList.remove("hidden");
+ $("collection-title").textContent="My Favorites";
+ $("collection-description").textContent="Your saved favorite coloring pages.";
+ $("search").value="";renderPages();
+}
+function showFinished(){
+ currentCollection="finished";filter="finished";
+ hideScreens();$("collection").classList.remove("hidden");
+ $("collection-title").textContent="Finished Pages";
+ $("collection-description").textContent="All the pictures you've marked as finished.";
+ $("search").value="";renderPages();
+}
+function setFilter(f){
+ filter=f;
+ $("all-button").classList.toggle("active",f==="all");
+ $("favorites-button").classList.toggle("active",f==="favorites");
+ renderPages();
+}
+function renderPages(){
+ let list=$("page-list");list.innerHTML="";
+ let query=$("search").value.toLowerCase();
+ let shown=pages.filter(p=>{
+  if(currentCollection==="favorites"&&!favorites.includes(p.id))return false;
+  if(currentCollection==="finished"&&!finished.includes(p.id))return false;
+  if(currentCollection!=="favorites"&&currentCollection!=="finished"&&p.collection!==currentCollection)return false;
+  if(filter==="favorites"&&!favorites.includes(p.id))return false;
+  return p.name.toLowerCase().includes(query);
+ });
+ if(!shown.length){list.innerHTML='<div class="empty">No pages found yet.</div>';return;}
+ shown.forEach(p=>{
+  let card=document.createElement("button");
+  card.className="page-card";
+  let isFav=favorites.includes(p.id);
+  card.innerHTML=`<div class="preview">${makePreview(p)}</div>
+   <button class="favorite" title="Favorite">${isFav?"♥":"♡"}</button>
+   <h3>${p.name}</h3><p>${p.collection==="christmas"?"Christmas":"Everyday"}</p>`;
+  card.querySelector(".favorite").onclick=e=>{
+   e.stopPropagation();toggleFavorite(p.id);renderPages();
+  };
+  card.onclick=()=>openPage(p);
+  list.appendChild(card);
+ });
+}
+function toggleFavorite(id){
+ favorites=favorites.includes(id)?favorites.filter(x=>x!==id):[...favorites,id];
+ localStorage.setItem("cb-favorites",JSON.stringify(favorites));
+}
+function openPage(page){
+ currentPage=page;history=[];future=[];
+ hideScreens();$("editor").classList.remove("hidden");
+ $("page-title").textContent=page.name;
+ $("drawing").innerHTML=makeArt(page.type,page.variant);
+ let saved=JSON.parse(localStorage.getItem("cb-page-"+page.id)||"{}");
+ $("drawing").querySelectorAll("[data-part]").forEach(el=>{
+  el.style.fill=saved[el.dataset.part]||"white";
+  el.addEventListener("click",()=>fillPart(el));
+ });
+ makePalette();
+}
+function backToPages(){
+ if(currentCollection==="favorites")showFavorites();
+ else if(currentCollection==="finished")showFinished();
+ else showCollection(currentCollection);
+}
+function makePalette(){
+ $("palette").innerHTML="";
+ colors.forEach(color=>{
+  let b=document.createElement("button");
+  b.className="swatch"+(color===currentColor?" selected":"");
+  b.style.background=color;b.title=color;
+  b.onclick=()=>{currentColor=color;$("custom").value=color;makePalette();};
+  $("palette").appendChild(b);
+ });
+}
+$("custom").addEventListener("input",e=>{
+ currentColor=e.target.value;makePalette();
 });
-
-function snapshot() {
-  return [...drawing.querySelectorAll("[data-part]")].map(part => ({
-    id: part.dataset.part,
-    fill: part.style.fill || "white"
-  }));
+function snapshot(){
+ return [...$("drawing").querySelectorAll("[data-part]")].map(el=>({
+  id:el.dataset.part,fill:el.style.fill||"white"
+ }));
 }
-
-function restore(state) {
-  state.forEach(item => {
-    const part = drawing.querySelector(`[data-part="${item.id}"]`);
-    if (part) part.style.fill = item.fill;
-  });
-  savePage();
+function restore(state){
+ state.forEach(item=>{
+  let el=[...$("drawing").querySelectorAll("[data-part]")].find(x=>x.dataset.part===item.id);
+  if(el)el.style.fill=item.fill;
+ });
+ savePage();
 }
-
-function fillPart(part) {
-  history.push(snapshot());
-  future = [];
-  part.style.fill = currentColor;
-  savePage();
+function fillPart(el){
+ history.push(snapshot());future=[];
+ el.style.fill=currentColor;savePage();
 }
-
-function undo() {
-  if (!history.length) return;
-  future.push(snapshot());
-  restore(history.pop());
+function undo(){
+ if(!history.length)return;
+ future.push(snapshot());restore(history.pop());
 }
-
-function redo() {
-  if (!future.length) return;
-  history.push(snapshot());
-  restore(future.pop());
+function redo(){
+ if(!future.length)return;
+ history.push(snapshot());restore(future.pop());
 }
-
-function resetPage() {
-  if (!confirm("Clear all the colors on this page?")) return;
-  history.push(snapshot());
-  future = [];
-  drawing.querySelectorAll("[data-part]").forEach(part => {
-    part.style.fill = "white";
-  });
-  savePage();
+function resetPage(){
+ if(!confirm("Clear all the colors on this page?"))return;
+ history.push(snapshot());future=[];
+ $("drawing").querySelectorAll("[data-part]").forEach(el=>el.style.fill="white");
+ savePage();
 }
-
-function savePage() {
-  const saved = {};
-  drawing.querySelectorAll("[data-part]").forEach(part => {
-    saved[part.dataset.part] = part.style.fill || "white";
-  });
-  localStorage.setItem("colorbook-" + currentPage, JSON.stringify(saved));
+function savePage(){
+ let data={};
+ $("drawing").querySelectorAll("[data-part]").forEach(el=>data[el.dataset.part]=el.style.fill||"white");
+ localStorage.setItem("cb-page-"+currentPage.id,JSON.stringify(data));
 }
+function markFinished(){
+ if(!finished.includes(currentPage.id))finished.push(currentPage.id);
+ localStorage.setItem("cb-finished",JSON.stringify(finished));
+ alert("Your page has been added to Finished Pages!");
+}
+makePalette();
 </script>
 </body>
 </html>
