@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colorbook</title>
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  background: #fbf8f1;
+  color: #344638;
+}
+
+header {
+  padding: 22px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e9e3d8;
+}
+
+.logo {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: bold;
+  color: #385643;
+}
+
+.logo span { color: #c77e83; }
+
+.header-note {
+  color: #8c9184;
+  font-size: 13px;
+}
+
+main {
+  max-width: 1100px;
+  margin: auto;
+  padding: 35px 22px 60px;
+}
+
+h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(30px, 5vw, 43px);
+  font-weight: normal;
+  margin: 5px 0 10px;
+}
+
+.subtitle {
+  color: #888c80;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.section-title {
+  font-family: Georgia, serif;
+  font-size: 23px;
+  margin: 32px 0 17px;
+}
+
+.collections {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.collection {
+  padding: 25px;
+  border: 1px solid #e8e1d6;
+  border-radius: 17px;
+  text-align: left;
+  cursor: pointer;
+  min-height: 155px;
+  transition: .2s;
+}
+
+.collection:hover, .page-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px #0000000c;
+}
+
+.collection.christmas { background: #f0f2e9; }
+.collection.regular { background: #f7e9e8; }
+
+.collection .symbol {
+  font-size: 31px;
+  margin-bottom: 12px;
+}
+
+.collection h2 {
+  font-family: Georgia, serif;
+  font-size: 23px;
+  margin: 0 0 6px;
+  font-weight: normal;
+}
+
+.collection p {
+  color: #85877e;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.pages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 18px;
+}
+
+.page-card {
+  background: white;
+  border: 1px solid #eae5dc;
+  border-radius: 15px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: .2s;
+}
+
+.page-preview {
+  height: 155px;
+  border-radius: 10px;
+  background: #fbfaf6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 75px;
+}
+
+.page-card h3 {
+  margin: 12px 4px 3px;
+  font-family: Georgia, serif;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.page-card p {
+  margin: 0 4px 5px;
+  color: #99958b;
+  font-size: 12px;
+}
+
+button {
+  font-family: inherit;
+}
+
+.hidden { display: none !important; }
+
+.back-button, .small-button {
+  border: 1px solid #e4ded4;
+  background: white;
+  border-radius: 30px;
+  padding: 10px 17px;
+  color: #526451;
+  cursor: pointer;
+}
+
+.back-button { margin-bottom: 20px; }
+
+.editor-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.editor-top h1 { font-size: 30px; }
+
+.editor-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 205px;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.canvas-area {
+  background: white;
+  border: 1px solid #e8e2d8;
+  border-radius: 17px;
+  padding: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 440px;
+}
+
+#drawing {
+  width: 100%;
+  max-width: 530px;
+  height: auto;
+  max-height: 540px;
+}
+
+#drawing [data-part] {
+  fill: white;
+  stroke: #30352f;
+  stroke-width: 4;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  cursor: pointer;
+  transition: fill .12s;
+}
+
+#drawing [data-part]:hover {
+  stroke: #8a9a83;
+  stroke-width: 5;
+}
+
+.tools {
+  background: white;
+  border: 1px solid #e8e2d8;
+  border-radius: 17px;
+  padding: 18px;
+  align-self: start;
+}
+
+.tools h3 {
+  font-family: Georgia, serif;
+  font-size: 19px;
+  font-weight: normal;
+  margin: 0 0 13px;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+  margin-bottom: 20px;
+}
+
+.swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #e8e4dc;
+  cursor: pointer;
+}
+
+.swatch.selected {
+  outline: 2px solid #526b57;
+  outline-offset: 3px;
+}
+
+.custom-color {
+  width: 100%;
+  height: 38px;
+  margin-bottom: 17px;
+  border: 1px solid #e8e2d8;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.tool-buttons {
+  display: grid;
+  gap: 8px;
+}
+
+.tool-buttons button {
+  border: 1px solid #e8e2d8;
+  background: #fbfaf6;
+  padding: 10px;
+  border-radius: 9px;
+  cursor: pointer;
+  color: #536451;
+}
+
+.tool-buttons button:hover, .small-button:hover,
+.back-button:hover { background: #f0f2e9; }
+
+.hint {
+  color: #99958b;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 15px;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #aaa396;
+  font-size: 12px;
+}
+
+@media(max-width: 650px) {
+  .editor-layout { grid-template-columns: 1fr; }
+  .canvas-area { min-height: 300px; }
+  #drawing { max-height: 390px; }
+  .tools { order: 2; }
+  .collections { gap: 10px; }
+  .collection { padding: 17px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Color<span>book</span></div>
+  <div class="header-note">your little coloring place</div>
+</header>
+
+<main>
+  <section id="home">
+    <h1>A little color goes a long way.</h1>
+    <p class="subtitle">Pick a collection, choose a page, and make it your own.</p>
+
+    <div class="section-title">Choose your collection</div>
+    <div class="collections">
+      <button class="collection christmas" onclick="showCollection('christmas')">
+        <div class="symbol">✳</div>
+        <h2>Christmas</h2>
+        <p>Cozy holiday coloring pages</p>
+      </button>
+      <button class="collection regular" onclick="showCollection('regular')">
+        <div class="symbol">✿</div>
+        <h2>Everyday</h2>
+        <p>Flowers, animals, and little things</p>
+      </button>
+    </div>
+  </section>
+
+  <section id="collection" class="hidden">
+    <button class="back-button" onclick="goHome()">← Collections</button>
+    <h1 id="collection-title"></h1>
+    <p class="subtitle" id="collection-description"></p>
+    <div class="pages" id="page-list"></div>
+  </section>
+
+  <section id="editor" class="hidden">
+    <div class="editor-top">
+      <div>
+        <button class="back-button" onclick="backToPages()">← Pages</button>
+        <h1 id="page-title"></h1>
+      </div>
+      <button class="small-button" onclick="savePage()">Save page</button>
+    </div>
+
+    <div class="editor-layout">
+      <div class="canvas-area">
+        <svg id="drawing" viewBox="0 0 400 430"
+             xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <aside class="tools">
+        <h3>Choose a color</h3>
+        <div class="palette" id="palette"></div>
+        <input class="custom-color" type="color" id="custom-color"
+               value="#e9a4a5" title="Choose your own color">
+
+        <h3>Tools</h3>
+        <div class="tool-buttons">
+          <button onclick="undo()">↶ Undo</button>
+          <button onclick="redo()">↷ Redo</button>
+          <button onclick="resetPage()">Reset page</button>
+        </div>
+        <p class="hint">Choose a color, then click any white section of the picture to fill it.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer>Made for a little creative time ♡</footer>
+
+<script>
+const colors = [
+  "#e9a4a5", "#d77c80", "#bd4c50", "#a83d43",
+  "#e9c1a2", "#e9d58f", "#f1e9c9", "#f5f0e4",
+  "#a9c5ad", "#668b70", "#365b43", "#b9d8df",
+  "#83b3c9", "#7185ad", "#b9a5ca", "#e0b6ce",
+  "#c7a58a", "#92745f", "#777a75", "#444943"
+];
+
+const drawings = {
+  tree: `
+    <path data-part="tree-star" d="M200 25 L210 47 L234 50 L216 67 L221 90 L200 78 L179 90 L184 67 L166 50 L190 47 Z"/>
+    <path data-part="tree-top" d="M200 80 L252 155 L224 150 L275 222 L239 215 L302 294 L98 294 L161 215 L125 222 L176 150 L148 155 Z"/>
+    <rect data-part="tree-trunk" x="175" y="294" width="50" height="75"/>
+    <circle data-part="ornament1" cx="200" cy="140" r="12"/>
+    <circle data-part="ornament2" cx="165" cy="207" r="13"/>
+    <circle data-part="ornament3" cx="237" cy="205" r="13"/>
+    <circle data-part="ornament4" cx="145" cy="267" r="13"/>
+    <circle data-part="ornament5" cx="255" cy="264" r="13"/>
+    <rect data-part="ground" x="70" y="369" width="260" height="3" />
+  `,
+  present: `
+    <rect data-part="box" x="80" y="180" width="240" height="165" rx="8"/>
+    <rect data-part="ribbon1" x="181" y="180" width="38" height="165"/>
+    <rect data-part="ribbon2" x="80" y="238" width="240" height="35"/>
+    <path data-part="bow1" d="M200 180 C115 95 85 165 185 207 Z"/>
+    <path data-part="bow2" d="M200 180 C285 95 315 165 215 207 Z"/>
+    <circle data-part="bow-center" cx="200" cy="190" r="13"/>
+  `,
+  snowman: `
+    <circle data-part="body-bottom" cx="200" cy="300" r="83"/>
+    <circle data-part="body-middle" cx="200" cy="188" r="60"/>
+    <circle data-part="body-head" cx="200" cy="95" r="43"/>
+    <rect data-part="hat" x="163" y="33" width="74" height="12"/>
+    <rect data-part="hat-top" x="178" y="3" width="44" height="34"/>
+    <path data-part="scarf" d="M148 140 Q200 163 252 140 L247 160 Q200 182 153 160 Z"/>
+    <path data-part="scarf-tail" d="M225 155 L248 157 L240 220 L215 213 Z"/>
+    <circle data-part="nose" cx="200" cy="106" r="8"/>
+    <circle data-part="button1" cx="200" cy="187" r="8"/>
+    <circle data-part="button2" cx="200" cy="217" r="8"/>
+    <circle data-part="button3" cx="200" cy="247" r="8"/>
+  `,
+  flower: `
+    <ellipse data-part="petal1" cx="200" cy="105" rx="36" ry="67"/>
+    <ellipse data-part="petal2" cx="200" cy="245" rx="36" ry="67"/>
+    <ellipse data-part="petal3" cx="130" cy="175" rx="67" ry="36"/>
+    <ellipse data-part="petal4" cx="270" cy="175" rx="67" ry="36"/>
+    <ellipse data-part="petal5" cx="150" cy="125" rx="35" ry="57" transform="rotate(-45 150 125)"/>
+    <ellipse data-part="petal6" cx="250" cy="125" rx="35" ry="57" transform="rotate(45 250 125)"/>
+    <ellipse data-part="petal7" cx="150" cy="225" rx="35" ry="57" transform="rotate(45 150 225)"/>
+    <ellipse data-part="petal8" cx="250" cy="225" rx="35" ry="57" transform="rotate(-45 250 225)"/>
+    <circle data-part="flower-center" cx="200" cy="175" r="43"/>
+    <path data-part="stem" d="M190 218 Q200 300 192 390 L210 390 Q204 300 210 218 Z"/>
+    <path data-part="leaf1" d="M195 300 Q110 260 115 330 Q165 350 195 300 Z"/>
+    <path data-part="leaf2" d="M202 350 Q275 285 280 350 Q245 390 202 350 Z"/>
+  `,
+  mushroom: `
+    <path data-part="cap" d="M65 195 Q75 65 200 65 Q325 65 335 195 Z"/>
+    <path data-part="stem" d="M145 195 L255 195 L240 365 Q200 390 160 365 Z"/>
+    <circle data-part="spot1" cx="135" cy="140" r="16"/>
+    <circle data-part="spot2" cx="205" cy="105" r="18"/>
+    <circle data-part="spot3" cx="270" cy="150" r="15"/>
+  `,
+  heart: `
+    <path data-part="heart" d="M200 345 C155 295 55 220 75 140 C95 65 180 75 200 135 C220 75 305 65 325 140 C345 220 245 295 200 345 Z"/>
+  `
+};
+
+const pages = {
+  christmas: [
+    {id:"tree", name:"Christmas Tree", icon:"🎄"},
+    {id:"present", name:"Christmas Present", icon:"🎁"},
+    {id:"snowman", name:"Snowman", icon:"☃"}
+  ],
+  regular: [
+    {id:"flower", name:"Big Flower", icon:"🌼"},
+    {id:"mushroom", name:"Mushroom", icon:"🍄"},
+    {id:"heart", name:"Big Heart", icon:"♡"}
+  ]
+};
+
+let currentCollection = "";
+let currentPage = "";
+let currentColor = colors[0];
+let history = [];
+let future = [];
+
+const home = document.getElementById("home");
+const collectionScreen = document.getElementById("collection");
+const editor = document.getElementById("editor");
+const drawing = document.getElementById("drawing");
+
+function hideScreens() {
+  home.classList.add("hidden");
+  collectionScreen.classList.add("hidden");
+  editor.classList.add("hidden");
+}
+
+function goHome() {
+  hideScreens();
+  home.classList.remove("hidden");
+}
+
+function showCollection(name) {
+  currentCollection = name;
+  hideScreens();
+  collectionScreen.classList.remove("hidden");
+
+  document.getElementById("collection-title").textContent =
+    name === "christmas" ? "Christmas Coloring" : "Everyday Coloring";
+
+  document.getElementById("collection-description").textContent =
+    "Choose a picture to start coloring.";
+
+  const list = document.getElementById("page-list");
+  list.innerHTML = "";
+
+  pages[name].forEach(page => {
+    const card = document.createElement("button");
+    card.className = "page-card";
+    card.innerHTML = `
+      <div class="page-preview">${page.icon}</div>
+      <h3>${page.name}</h3>
+      <p>Tap to color</p>
+    `;
+    card.onclick = () => openPage(page.id, page.name);
+    list.appendChild(card);
+  });
+}
+
+function openPage(id, name) {
+  currentPage = id;
+  hideScreens();
+  editor.classList.remove("hidden");
+  document.getElementById("page-title").textContent = name;
+
+  drawing.innerHTML = drawings[id];
+  history = [];
+  future = [];
+
+  const saved = JSON.parse(localStorage.getItem("colorbook-" + id) || "{}");
+  drawing.querySelectorAll("[data-part]").forEach(part => {
+    part.style.fill = saved[part.dataset.part] || "white";
+  });
+
+  drawing.querySelectorAll("[data-part]").forEach(part => {
+    part.addEventListener("click", () => fillPart(part));
+  });
+
+  makePalette();
+}
+
+function backToPages() {
+  showCollection(currentCollection);
+}
+
+function makePalette() {
+  const palette = document.getElementById("palette");
+  palette.innerHTML = "";
+
+  colors.forEach(color => {
+    const button = document.createElement("button");
+    button.className = "swatch";
+    button.style.background = color;
+    button.title = color;
+
+    if (color === currentColor) button.classList.add("selected");
+
+    button.onclick = () => {
+      currentColor = color;
+      document.getElementById("custom-color").value = color;
+      makePalette();
+    };
+
+    palette.appendChild(button);
+  });
+}
+
+document.getElementById("custom-color").addEventListener("input", event => {
+  currentColor = event.target.value;
+  makePalette();
+});
+
+function snapshot() {
+  return [...drawing.querySelectorAll("[data-part]")].map(part => ({
+    id: part.dataset.part,
+    fill: part.style.fill || "white"
+  }));
+}
+
+function restore(state) {
+  state.forEach(item => {
+    const part = drawing.querySelector(`[data-part="${item.id}"]`);
+    if (part) part.style.fill = item.fill;
+  });
+  savePage();
+}
+
+function fillPart(part) {
+  history.push(snapshot());
+  future = [];
+  part.style.fill = currentColor;
+  savePage();
+}
+
+function undo() {
+  if (!history.length) return;
+  future.push(snapshot());
+  restore(history.pop());
+}
+
+function redo() {
+  if (!future.length) return;
+  history.push(snapshot());
+  restore(future.pop());
+}
+
+function resetPage() {
+  if (!confirm("Clear all the colors on this page?")) return;
+  history.push(snapshot());
+  future = [];
+  drawing.querySelectorAll("[data-part]").forEach(part => {
+    part.style.fill = "white";
+  });
+  savePage();
+}
+
+function savePage() {
+  const saved = {};
+  drawing.querySelectorAll("[data-part]").forEach(part => {
+    saved[part.dataset.part] = part.style.fill || "white";
+  });
+  localStorage.setItem("colorbook-" + currentPage, JSON.stringify(saved));
+}
+</script>
+</body>
+</html>
